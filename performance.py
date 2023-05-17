@@ -1,13 +1,28 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 
 """
+This module contains functions to compute the Performance of an Aircraft.
 
-@author: stevenstefanoinojosasiso
+(c) Copyright 2023, Steven Inojosa
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import numpy as np
 import math
+from sympy import symbols, solve, diff
 
 from sklearn.linear_model import LinearRegression
 
@@ -258,13 +273,14 @@ class Performance:
         
         return distance[0]          
     
-    def speeds(self, altitude):
+    def speeds(self, altitude, W):
         
         """
         Calculate performance speeds for a given altitude.
     
         Parameters:
             altitude (float): Altitude [m], International Standard Atmosphere (ISA).
+            W (float): Weight [kg].
             
         Returns:
             V_min (float): Minimum speed [m/s].   
@@ -274,24 +290,34 @@ class Performance:
             V_loiter (float): Loiter speed [m/s].  
         """
         
-        # min_max     = double( solve( a(i)*V^3 + b(i)*V^2 + c(i)*V + d(i) - ...
-        # 0.5*densidad(i)*(V^3)*S*(Cd0+K*( 2*W(i) / (densidad(i)*V^2*S))^2 ) ...
-        # == 0, V ) );
-        # min_max = min_max(min_max>0)
+        density = self.engine.get_density(altitude)
+        a = self.engine.get_a(altitude)
+        b = self.engine.get_b(altitude)
+        c = self.engine.get_c(altitude)
+        d = self.engine.get_d(altitude) 
+        CD0 = self.get_CD0()
+        S = self.get_Sref()
+        K = self.get_K()
         
-        # V_min(i)    = min(min_max)
-        # V_max(i)    = max(min_max)
         
-        V_carson = (( 2/densidad) * (3*K/Cd0)**0.5 * W/S )**0.5
-        V_cruise = (( 2/densidad) * (  K/Cd0)**0.5 * W/S )**0.5 
-        V_loiter = (( 2/densidad) * (K/(3*Cd0))**0.5 * W/S )**0.5
+        # Define symbols used in the equation
+        V = symbols('V')
+        
+        # Define the Rate of Climb as Equal to 0
+        dH_dt = (a*V**3 + b*V**2 + c*V + d)/W - \
+            density*V**3*S/(2*W) * (CD0+K*(2*W/(density*V**2*S))**2)
+        
+        # Find the zeros of the equation
+        min_max = solve(dH_dt, V)
+        min_max = [v for v in min_max if v >= 0]
+        
+        # Obtain the minimum and maximum values of velocity
+        V_min = min(min_max)
+        V_max = max(min_max)
+        
+        # Obtain the Carson, Cruise and Loiter speeds
+        V_carson = (( 2/density) * (3*K/CD0)**0.5 * W/S )**0.5
+        V_cruise = (( 2/density) * (  K/CD0)**0.5 * W/S )**0.5 
+        V_loiter = (( 2/density) * (K/(3*CD0))**0.5 * W/S )**0.5
         
         return V_min, V_max ,V_carson ,V_cruise, V_loiter  
-    
-    def get_mass(self):
-        return self.__mass
-    
-    # def get_distance(self):
-    #     return self.__distance
-    
-
