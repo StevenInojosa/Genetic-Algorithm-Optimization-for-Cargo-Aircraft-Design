@@ -8,8 +8,9 @@
 from aerodynamics import *
 from performance import *
 from stability import *
+from structures import *
 
-class Aircraft(Aerodynamics, Performance, Stability):
+class Aircraft(Aerodynamics, Performance, Stability, Structures):
     """
     A class that represents an aircraft.
 
@@ -190,7 +191,11 @@ class Surface:
         
     def add_section(self, section):
         self.__sections.append(section)
-        self.chords()
+        
+        try:
+            self.chords()
+        except:
+            pass
         
     def get_sections(self):
         """
@@ -224,25 +229,32 @@ class Surface:
         Computes the wing's mean aerodynamic chord (MAC), its reference area (S), and its reference area divided by its 
         mean chord (c).
         """
-        y = sp.symbols(('y'))
-        I_mac = 0
-        S = 0
-        for ii in range(len(self.get_sections())-1):
-            c0 = self.get_sections()[ii].get_Chord()
-            c1 = self.get_sections()[ii+1].get_Chord()
-            y0 = self.get_sections()[ii].get_Yle()
-            y1 = self.get_sections()[ii+1].get_Yle()
-            
-            c_y = (c1-c0)/(y1-y0)*y + c0
-            
-            I_mac += sp.integrate(c_y**2, (y,0,y1-y0))
-            S += 2*(y1-y0)*(c1+c0)/2
         try:
+            y = sp.symbols(('y'))
+            I_mac = 0
+            S = 0
+            for ii in range(len(self.get_sections())-1):
+                c0 = self.get_sections()[ii].get_Chord()
+                c1 = self.get_sections()[ii+1].get_Chord()
+                y0 = self.get_sections()[ii].get_Yle()
+                y1 = self.get_sections()[ii+1].get_Yle()
+                
+                if y0 == y1:
+                    break
+                
+                c_y = (c1-c0)/(y1-y0)*y + c0
+                
+                I_mac += sp.integrate(c_y**2, (y,0,y1-y0))
+                S += 2*(y1-y0)*(c1+c0)/2
+        
             self.__mac = (2/S)*I_mac
             self.__smc = S/(2*self.get_sections()[-1].get_Yle())
             self.__S = S
-        except:
-            pass
+        except: 
+            self.__mac = self.__smc = ( self.get_sections()[0].get_Chord() + 
+                                        self.get_sections()[1].get_Chord() ) / 2
+            bv = self.get_Yle()
+            self.__S = SMCv * self.__smc
         
     def get_mac(self):
         """
@@ -360,4 +372,3 @@ class Section:
             return self.__airfoil[0]
         elif get == 't':
             return self.__airfoil[1]
-
