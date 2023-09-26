@@ -183,6 +183,11 @@ class Performance:
         CL = CL0
         G, G2 = self.ground_effect(H, CL)
         
+        if all([CLmax<0,
+                CL0<0,
+                CD0<0,
+                K<0]):
+            return 0
         
         # Algorithm for the calculation of the maximum take-off mass
         while (mass_sup-mass_inf)/2 > Error:
@@ -195,6 +200,8 @@ class Performance:
             V_stall = ( W / (0.5*density*CLmax*S) )**0.5
             V_LOF    = 1.2*V_stall
             
+            
+            
             # Ground Roll
             while V0 < V_LOF:
                 # Aceleración
@@ -203,7 +210,7 @@ class Performance:
                 V = 0.5*(V0+V1)
                 Sg = Sg + V*dt
                 V0 = V1
-                t = t+dt;
+                t += dt;
                 
                 if t > 300:
                     mass = 0.001
@@ -250,6 +257,12 @@ class Performance:
         CL    = CL0
         G, G2 = self.ground_effect(H, CL)
         
+        if all([CLmax<0,
+                CL0<0,
+                CD0<0,
+                K<0]):
+            return 0
+        
         # Algorithm for calculating landing distance
         while abs( distance[0] - distance[1] ) > Error:
         
@@ -258,7 +271,7 @@ class Performance:
             vstall = (mass*g/(density*S*CLmax/2))**(1/2) 
             v=1.1*vstall                             
             t = 0                                    
-        
+            
             while v > 0:                          
                 CD = CD0 + G*K*(CL*G2)**2                  
                 D  = 0.5 * density * v**2 * S * CD        
@@ -270,7 +283,7 @@ class Performance:
                 v = v+dt*dv_dt                           
 
             dt = dt/2                                
-        
+
         return distance[0]          
     
     def speeds(self, altitude, W):
@@ -303,21 +316,29 @@ class Performance:
         # Define symbols used in the equation
         V = symbols('V')
         
-        # Define the Rate of Climb as Equal to 0
-        dH_dt = (a*V**3 + b*V**2 + c*V + d)/W - \
-            density*V**3*S/(2*W) * (CD0+K*(2*W/(density*V**2*S))**2)
+        # # Define the Rate of Climb as Equal to 0
+        # dH_dt = (a*V**3 + b*V**2 + c*V + d)/W - \
+        #     density*V**3*S/(2*W) * (CD0+K*(2*W/(density*V**2*S))**2)
         
-        # Find the zeros of the equation
-        min_max = solve(dH_dt, V)
-        min_max = [v for v in min_max if v >= 0]
+        # # Find the zeros of the equation
+        # min_max = solve(dH_dt, V)
+        # min_max = [v for v in min_max if v >= 0]
         
-        # Obtain the minimum and maximum values of velocity
-        V_min = min(min_max)
-        V_max = max(min_max)
+        # # Obtain the minimum and maximum values of velocity
+        # V_min = min(min_max)
+        # V_max = max(min_max)
         
         # Obtain the Carson, Cruise and Loiter speeds
         V_carson = (( 2/density) * (3*K/CD0)**0.5 * W/S )**0.5
         V_cruise = (( 2/density) * (  K/CD0)**0.5 * W/S )**0.5 
         V_loiter = (( 2/density) * (K/(3*CD0))**0.5 * W/S )**0.5
         
-        return V_min, V_max ,V_carson ,V_cruise, V_loiter  
+        Pav = []
+        Preq = []
+        for vel in np.linspace(start = 1, stop = 30, num = 16):
+            Pav.append( [vel, a*vel**3 + b*vel**2 + c*vel + d] )
+            Preq.append( [vel, density*vel**3*S/2 * (CD0+K*(2*W/(density*vel**2*S))**2)] )
+            
+        # V_min, V_max ,
+        
+        return V_carson ,V_cruise, V_loiter, Pav, Preq  
