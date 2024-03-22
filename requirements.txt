@@ -1,0 +1,8 @@
+# Python version: 3.9.13
+
+numpy==1.21.5
+sympy==1.10.1
+pygad==2.19.2
+pandas==1.4.4
+
+# Run: pip install -r requirements.txt
