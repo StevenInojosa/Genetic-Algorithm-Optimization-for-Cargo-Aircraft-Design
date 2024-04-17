@@ -1,0 +1,138 @@
+# Este archivo fue creado usando un programa de Python 
+# Fecha: Wed Mar  6 20:14:28 2024 
+
+Turpial 
+
+0.0                             | Mach 
+0       0        0.0            | iYsym  iZsym  Zsym 
+0.338    0.231    1.538         | Sref   Cref   Bref 
+0.058    0.000    0.000         | Xref   Yref   Zref 
+0.318                           | CDp    
+
+
+#================================================= 
+SURFACE                         | (keyword) 
+wing 
+#Nchord   Cspace     [ Nspan Sspace ] 
+10        1.0 
+
+INDEX                           | (keyword) 
+31621                           | Lsurf 
+
+YDUPLICATE 
+0.0 
+
+SCALE 
+1.0  1.0  1.0 
+
+TRANSLATE 
+0.000    0.000    0.000 
+
+ANGLE 
+  3.000                         | dAinc 
+
+#______________ 
+SECTION                         |  (keyword) 
+
+# Xle    Yle      Zle      Chord    Ainc    [Nspan Sspace] 
+0.000    0.000    0.000    0.262    0.000    12    -1 
+
+AFIL 0.0 1.0 
+/Users/stevenstefanoinojosasiso/Documents/Tesis/Programa/Airfoils/s1223.dat
+
+#______________ 
+SECTION                         |  (keyword) 
+
+# Xle    Yle      Zle      Chord    Ainc    [Nspan Sspace] 
+0.000    0.344    0.000    0.262    0.000    12    -1 
+
+AFIL 0.0 1.0 
+/Users/stevenstefanoinojosasiso/Documents/Tesis/Programa/Airfoils/s1223.dat
+
+#______________ 
+SECTION                         |  (keyword) 
+
+# Xle    Yle      Zle      Chord    Ainc    [Nspan Sspace] 
+0.000    0.769    0.000    0.109    0.000    12    -1 
+
+AFIL 0.0 1.0 
+/Users/stevenstefanoinojosasiso/Documents/Tesis/Programa/Airfoils/s1223.dat
+
+#================================================= 
+SURFACE                         | (keyword) 
+horizontal 
+#Nchord   Cspace     [ Nspan Sspace ] 
+10        1.0 
+
+INDEX                           | (keyword) 
+31621                           | Lsurf 
+
+YDUPLICATE 
+0.0 
+
+SCALE 
+1.0  1.0  1.0 
+
+TRANSLATE 
+0.779    0.000    0.350 
+
+ANGLE 
+  0.000                         | dAinc 
+
+#______________ 
+SECTION                         |  (keyword) 
+
+# Xle    Yle      Zle      Chord    Ainc    [Nspan Sspace] 
+0.000    0.000    0.000    0.150    0.000    12    -1 
+
+AFIL 0.0 1.0 
+/Users/stevenstefanoinojosasiso/Documents/Tesis/Programa/Airfoils/naca0012.dat
+
+#______________ 
+SECTION                         |  (keyword) 
+
+# Xle    Yle      Zle      Chord    Ainc    [Nspan Sspace] 
+0.000    0.322    0.000    0.150    0.000    12    -1 
+
+AFIL 0.0 1.0 
+/Users/stevenstefanoinojosasiso/Documents/Tesis/Programa/Airfoils/naca0012.dat
+
+#================================================= 
+SURFACE                         | (keyword) 
+vertical 
+#Nchord   Cspace     [ Nspan Sspace ] 
+10        1.0 
+
+INDEX                           | (keyword) 
+31621                           | Lsurf 
+
+YDUPLICATE 
+0.0 
+
+SCALE 
+1.0  1.0  1.0 
+
+TRANSLATE 
+0.779    0.000    0.350 
+
+ANGLE 
+  0.000                         | dAinc 
+
+#______________ 
+SECTION                         |  (keyword) 
+
+# Xle    Yle      Zle      Chord    Ainc    [Nspan Sspace] 
+0.000    0.322    -0.458    0.150    0.000    12    -1 
+
+AFIL 0.0 1.0 
+/Users/stevenstefanoinojosasiso/Documents/Tesis/Programa/Airfoils/naca0012.dat
+
+#______________ 
+SECTION                         |  (keyword) 
+
+# Xle    Yle      Zle      Chord    Ainc    [Nspan Sspace] 
+0.000    0.322    0.458    0.150    0.000    12    -1 
+
+AFIL 0.0 1.0 
+/Users/stevenstefanoinojosasiso/Documents/Tesis/Programa/Airfoils/naca0012.dat
+
